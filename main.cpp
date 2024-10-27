@@ -15,7 +15,7 @@ int main() {
         saveBMP(rotatedClockwiseFilename, rotatedClockwise);
         std::cout << "Image was rotated clockwise and was save " << rotatedClockwiseFilename << "\n";
 
-        BMPImage rotatedCounterClockwise = rotate90Counterwise(image);
+        BMPImage rotatedCounterClockwise = rotate90CounterClockwise(image);
         std::string rotatedCounterClockwiseFilename = "rCounterClockwise.bmp";
         saveBMP(rotatedCounterClockwiseFilename, rotatedCounterClockwise);
         std::cout << "Image was rotated counter clockwise and was save " << rotatedCounterClockwiseFilename << "\n";

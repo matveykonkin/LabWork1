@@ -39,7 +39,7 @@ BMPImage useGaussFilter(const BMPImage& image) {
                     sumB += b * weight;
                 }
             }
-            return filteredImage;
         }
     }
+    return filteredImage;
 }

@@ -22,7 +22,7 @@ BMPImage rotate90Clockwise(const BMPImage& image) {
     return rotatedImage;
 }
 
-BMPImage rotate90Counterclockwise(const BMPImage& image) {
+BMPImage rotate90CounterClockwise(const BMPImage& image) {
     BMPImage rotatedImage;
     rotatedImage.width = image.height;
     rotatedImage.height = image.width;
@@ -43,4 +43,3 @@ BMPImage rotate90Counterclockwise(const BMPImage& image) {
     }
     return rotatedImage;
 }
-

@@ -4,7 +4,8 @@
 ## Contacts
 st135668@stdudent.spbu.ru
 ## Description
-
+this programm work with file if his name is "input.bmp"
 ## Build
-
+make
 ## Run
+./imageBMP

@@ -21,7 +21,7 @@ int main() {
         std::cout << "Image was rotated counter clockwise and was save " << rotatedCounterClockwiseFilename << "\n";
 
         BMPImage gaussClockwise = useGaussFilter(rotatedClockwise);
-        std::string gaussClockwiseFilename = "gaussClockwise";
+        std::string gaussClockwiseFilename = "gaussClockwise.bmp";
         saveBMP(gaussClockwiseFilename, gaussClockwise);
         std::cout << "Gauss filter is apllied with rotated clockwise image and result is saved " << gaussClockwiseFilename << "\n";
 

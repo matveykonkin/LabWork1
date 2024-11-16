@@ -52,7 +52,7 @@ BMPImage loadBMP(const std::string& filename) {
     image.bytesPerPixel = header.bitsPerPixel / 8;
 
     // Вычисляем размер строки с учетом паддинга
-    size_t rowSize = ((header.bitsPerPixel / 8 * image.width + 3) & (~3));
+    size_t rowSize = ((header.bitsPerPixel / 8 * image.width + 3) & (~3)); // А ты сможешь объяснить, что тут происходит?
 
     // Размер данных изображения
     size_t imageSize = rowSize * image.height;
@@ -67,7 +67,9 @@ BMPImage loadBMP(const std::string& filename) {
 
     return image;
 }
-
+// У меня лично твоя программа не работает.
+// Я думаю, дело в том, как ты записываешь заголовок. В нем есть куда больше данных, чем ты тут
+// заполняешь. Я думаю, в структуре картинки надо хранить заголовок целиком
 void saveBMP(const std::string& filename, const BMPImage& image) {
     BMPHeader header;
     header.fileType = 0x4D42; // 'BM'

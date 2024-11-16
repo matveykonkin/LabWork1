@@ -2,7 +2,7 @@
 #include <cmath>
 #include <vector>
 #include <algorithm> 
-
+// Хочется иметь возможность задавать размер ядра
 std::vector<std::vector<double>> createGaussCore() {
     return {
         {1 / 16.0, 2 / 16.0, 1 / 16.0},

@@ -3,6 +3,6 @@
 
 #include "bmp.h"
 
-BMPImage useGaussFilter(const BMPImage& image);
+BMPImage useGaussFilter( BMPImage& image);
 
 #endif

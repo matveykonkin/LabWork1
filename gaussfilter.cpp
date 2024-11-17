@@ -11,7 +11,7 @@ std::vector<std::vector<double>> createGaussCore() {
     };
 }
 
-BMPImage useGaussFilter(const BMPImage& image) {
+BMPImage useGaussFilter( BMPImage& image) {
     BMPImage filteredImage = image;
     filteredImage.pixelData.resize(image.width * image.height * image.bytesPerPixel);
     

@@ -6,29 +6,35 @@
 
 int main() {
     try {
+        // Загружаем изображение
         std::string inputFilename = "input.bmp";
-        BMPImage image = loadBMP(inputFilename);
-        std::cout << "Image is upload " << inputFilename << "\n";
+        BMPImage image;
+        image.load(inputFilename);
+        std::cout << "Image is uploaded: " << inputFilename << "\n";
 
+        // Поворот по часовой стрелке
         BMPImage rotatedClockwise = rotate90Clockwise(image);
         std::string rotatedClockwiseFilename = "rClockwise.bmp";
-        saveBMP(rotatedClockwiseFilename, rotatedClockwise);
-        std::cout << "Image was rotated clockwise and was save " << rotatedClockwiseFilename << "\n";
+        rotatedClockwise.save(rotatedClockwiseFilename);
+        std::cout << "Image was rotated clockwise and saved to: " << rotatedClockwiseFilename << "\n";
 
+        // Поворот против часовой стрелки
         BMPImage rotatedCounterClockwise = rotate90CounterClockwise(image);
         std::string rotatedCounterClockwiseFilename = "rCounterClockwise.bmp";
-        saveBMP(rotatedCounterClockwiseFilename, rotatedCounterClockwise);
-        std::cout << "Image was rotated counter clockwise and was save " << rotatedCounterClockwiseFilename << "\n";
+        rotatedCounterClockwise.save(rotatedCounterClockwiseFilename);
+        std::cout << "Image was rotated counter clockwise and saved to: " << rotatedCounterClockwiseFilename << "\n";
 
+        // Применение фильтра Гаусса к изображению, повернутому по часовой стрелке
         BMPImage gaussClockwise = useGaussFilter(rotatedClockwise);
         std::string gaussClockwiseFilename = "gaussClockwise.bmp";
-        saveBMP(gaussClockwiseFilename, gaussClockwise);
-        std::cout << "Gauss filter is apllied with rotated clockwise image and result is saved " << gaussClockwiseFilename << "\n";
+        gaussClockwise.save(gaussClockwiseFilename);
+        std::cout << "Gauss filter applied to clockwise rotated image and saved to: " << gaussClockwiseFilename << "\n";
 
+        // Применение фильтра Гаусса к изображению, повернутому против часовой стрелки
         BMPImage gaussCounterClockwise = useGaussFilter(rotatedCounterClockwise);
-        std::string gaussCounterClockwiseFilename = "gaussContercwise.bmp";
-        saveBMP(gaussCounterClockwiseFilename, gaussCounterClockwise);
-        std::cout << "Gauss filter is apllied with rotated counter clockwise image and result is saved " << gaussCounterClockwiseFilename << "\n";
+        std::string gaussCounterClockwiseFilename = "gaussCounterClockwise.bmp";
+        gaussCounterClockwise.save(gaussCounterClockwiseFilename);
+        std::cout << "Gauss filter applied to counter clockwise rotated image and saved to: " << gaussCounterClockwiseFilename << "\n";
 
     } catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << "\n";

@@ -30,11 +30,11 @@ struct BMPImage {
     int height;
     int bytesPerPixel;
     std::vector<uint8_t> pixelData;
-    void load( std::string& filename);
-    void save( std::string& filename);
+    void load(const std::string& filename);
+    void save(const std::string& filename);
 };
 
-BMPImage loadBMP( std::string& filename);
-void saveBMP( std::string& filename);
+BMPImage loadBMP(const std::string& filename);
+void saveBMP(const std::string& filename);
 
 #endif

@@ -3,7 +3,7 @@
 
 #include "bmp.h"
 
-BMPImage rotate90Clockwise( BMPImage& image);
-BMPImage rotate90CounterClockwise( BMPImage& image);
+BMPImage rotate90Clockwise(const BMPImage& image);
+BMPImage rotate90CounterClockwise(const BMPImage& image);
 
 #endif

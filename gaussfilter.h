@@ -3,6 +3,7 @@
 
 #include "bmp.h"
 
-BMPImage useGaussFilter(const BMPImage& image);
+std::vector<std::vector<double>> createGaussCore(int size, double sigma);
+BMPImage useGaussFilter(const BMPImage& image, int coreSize, double sigma);
 
 #endif

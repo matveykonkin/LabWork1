@@ -58,29 +58,42 @@ void BMPImage::load(const std::string& filename) {
         throw std::runtime_error("Error: Failed to read BMP info header");
     }
 
-   if (infoHeader.imageSize == 0) {
-       infoHeader.imageSize = infoHeader.width * infoHeader.height * (infoHeader.bitsPerPixel / 8);
-   }
+    std::cout << "BMP Header:" << std::endl;
+    std::cout << "File Type: " << header.fileType << std::endl;
+    std::cout << "File Size: " << header.fileSize << std::endl;
+    std::cout << "Data Offset: " << header.offsetData << std::endl;
 
-   if (header.offsetData < sizeof(BMPHeader) + sizeof(BMPInfoHeader)) {
-       throw std::runtime_error("Error: Invalid offset data in BMP header");
-   }
+    std::cout << "BMP Info Header:" << std::endl;
+    std::cout << "Size: " << infoHeader.size << std::endl;
+    std::cout << "Width: " << infoHeader.width << std::endl;
+    std::cout << "Height: " << infoHeader.height << std::endl;
+    std::cout << "Bits per Pixel: " << infoHeader.bitsPerPixel << std::endl;
+    std::cout << "Image Size: " << infoHeader.imageSize << std::endl;
 
-   pixelData.resize(infoHeader.imageSize);
-   file.seekg(header.offsetData, std::ios::beg);
+    if (infoHeader.imageSize == 0) {
+        infoHeader.imageSize = infoHeader.width * infoHeader.height * (infoHeader.bitsPerPixel / 8);
+    }
 
-   int rowSize = ((infoHeader.bitsPerPixel * infoHeader.width + 31) / 32) * 4; 
-   int padding = rowSize - (infoHeader.width * getBytesPerPixel());
+    if (header.offsetData < sizeof(BMPHeader) + sizeof(BMPInfoHeader)) {
+        throw std::runtime_error("Error: Invalid offset data in BMP header");
+    }
 
-   for (int y = 0; y < infoHeader.height; ++y) {
-       file.read(reinterpret_cast<char*>(pixelData.data()) + y * rowSize, infoHeader.width * getBytesPerPixel());
-       if (file.gcount() != infoHeader.width * getBytesPerPixel()) {
-           throw std::runtime_error("Error: Failed to read pixel data");
-       }
-       file.ignore(padding);
-   }
+    pixelData.resize(infoHeader.imageSize);
+    file.seekg(header.offsetData, std::ios::beg);
 
-   std::cout << "Loaded BMP File: " << filename << "\n";
+    int rowSize = ((infoHeader.bitsPerPixel * infoHeader.width + 31) / 32) * 4;
+    int padding = rowSize - (infoHeader.width * getBytesPerPixel());
+
+    for (int y = 0; y < infoHeader.height; ++y) {
+        file.read(reinterpret_cast<char*>(pixelData.data()) + y * rowSize, infoHeader.width * getBytesPerPixel());
+        if (file.gcount() != infoHeader.width * getBytesPerPixel()) {
+            throw std::runtime_error("Error: Failed to read pixel data");
+        }
+        file.ignore(padding);
+    }
+
+    std::cout << "Loaded BMP File: " << filename << "\n";
+    std::cout << "Image dimensions: " << infoHeader.width << "x" << infoHeader.height << "\n";
 }
 
 void BMPImage::save(const std::string& filename) {

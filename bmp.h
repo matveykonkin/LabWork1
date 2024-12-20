@@ -34,7 +34,6 @@ private:
     std::vector<uint8_t> pixelData;
 
 public:
-    // Getters
     const BMPHeader& getHeader() const;
     const BMPInfoHeader& getInfoHeader() const;
     const std::vector<uint8_t>& getPixelData() const;
@@ -42,12 +41,10 @@ public:
     int getHeight() const;
     int getBytesPerPixel() const;
 
-    // Setters
     void setHeader(const BMPHeader& hdr);
     void setInfoHeader(const BMPInfoHeader& infoHdr);
     void setPixelData(const std::vector<uint8_t>& data);
 
-    // Load and save methods
     void load(const std::string& filename);
     void save(const std::string& filename);
 };

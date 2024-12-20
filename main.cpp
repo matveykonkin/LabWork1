@@ -1,43 +1,40 @@
-#include "bmp.h"
-#include "image.h"
-#include "gaussfilter.h"
+/* ## LabWork1
+## Author
+Konkin Matvey B83-mm
+## Contacts
+st135668@student.spbu.ru
+## Description
+LabWork1 */
+
 #include <iostream>
+#include <vector>
 #include <string>
+#include "image.h"
+#include "turnimage.h"
 
-int main() {
-	try {
-		std::string inputFilename = "input.bmp";
-		BMPImage image;
-		image.load(inputFilename);
-		std::cout << "Image loaded: " << inputFilename << "\n";
+int main(int argc, char* argv[])
+{
+    std::cout << "Enter path to image file, radius (int), and sigma (float) for Gaussian blur:" << std::endl;
+    
+    std::string path;
+    std::getline(std::cin, path);
+    
+    int radius;
+    float sigma;
+    std::cin >> radius >> sigma;
 
-		BMPImage rotatedClockwise = rotate90Clockwise(image);
-		std::string rotatedClockwiseFilename = "rClockwise.bmp";
-		rotatedClockwise.save(rotatedClockwiseFilename);
-		std::cout << "Image rotated clockwise and saved to: " << rotatedClockwiseFilename << "\n";
+    Turn_Image::RightTurn(path.c_str());
+    Turn_Image::LeftTurn(path.c_str());
 
-		BMPImage rotatedCounterClockwise = rotate90CounterClockwise(image);
-		std::string rotatedCounterClockwiseFilename = "rCounterClockwise.bmp";
-		rotatedCounterClockwise.save(rotatedCounterClockwiseFilename);
-		std::cout << "Image rotated counterclockwise and saved to: " << rotatedCounterClockwiseFilename << "\n";
+    Image leftImage(0, 0);
+    leftImage.Read("Left_rotated_image.bmp");
+    leftImage.ApplyGaussianBlur(radius, sigma);
+    leftImage.Export("Blurred_Left_Rotated_Image.bmp");
 
-        int gaussCoreSize = 5;  
-        double gaussSigma = 1.5; 
+    Image rightImage(0, 0);
+    rightImage.Read("Right_rotated_image.bmp");
+    rightImage.ApplyGaussianBlur(radius, sigma);
+    rightImage.Export("Blurred_Right_Rotated_Image.bmp");
 
-        BMPImage gaussClockwise = useGaussFilter(rotatedClockwise, gaussCoreSize, gaussSigma);
-        std::string gaussClockwiseFilename = "gaussClockwise.bmp";
-        gaussClockwise.save(gaussClockwiseFilename);
-        std::cout << "Gauss filter applied to clockwise rotated image and saved to: " << gaussClockwiseFilename << "\n";
-
-        BMPImage gaussCounterClockwise= useGaussFilter(rotatedCounterClockwise, gaussCoreSize, gaussSigma);
-        std::string gaussCounterClockwiseFilename= "gaussCounterClockwise.bmp";
-        gaussCounterClockwise.save(gaussCounterClockwiseFilename);
-        std::cout << "Gauss filter applied to counterclockwise rotated image and saved to: " << gaussCounterClockwiseFilename << "\n";
-
-	} catch (const std::exception& e) {
-	    std::cerr << "Error: " << e.what() << "\n";
-	    return 1;
-	}
-
-	return 0;
+    return 0;
 }

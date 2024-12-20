@@ -1,19 +1,39 @@
-TARGET = imageBMP
+PROJECT=image
 
-CXX = g++
-CXXFLAGS = -std=c++17 -Wall -Wextra 
+IDIR=.
+CXX=g++
+CXXFLAGS=-I$(IDIR) -std=c++17
 
-INCLUDES = bmp.h gaussfilter.h image.h
-SOURCES = bmp.cpp gaussfilter.cpp image.cpp main.cpp
-OBJECTS = $(SOURCES:.cpp=.o)
+ODIR=obj
+LDIR=../lib
 
-all: $(TARGET)
+LIBS=-lm
 
-$(TARGET): $(OBJECTS)
-	$(CXX) $(CXXFLAGS) -o $(TARGET) $(OBJECTS)
+DEPS = image.h turnimage.h kernel.h
 
-%.o: %.cpp $(INCLUDES)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+OBJ = main.o image.o rightturnimage.o leftturnimage.o kernel.o
 
-clean: 
-	rm -f $(TARGET) $(OBJECTS)
+.PHONY: default
+
+default: $(PROJECT)
+
+$(PROJECT): $(OBJ)
+	$(CXX) -o $@ $^ $(LIBS)
+
+main.o: main.cpp $(DEPS)
+	$(CXX) -c -o $@ $< $(CXXFLAGS)
+
+Image.o: image.cpp $(DEPS)
+	$(CXX) -c -o $@ $< $(CXXFLAGS)
+
+RightTurnImage.o: rightturnimage.cpp $(DEPS)
+	$(CXX) -c -o $@ $< $(CXXFLAGS)
+
+LeftTurnImage.o: leftturnimage.cpp $(DEPS)
+	$(CXX) -c -o $@ $< $(CXXFLAGS)
+
+Kernel.o: kernel.cpp $(DEPS)
+	$(CXX) -c -o $@ $< $(CXXFLAGS)
+
+clean:
+	rm -f $(OBJ) $(PROJECT)

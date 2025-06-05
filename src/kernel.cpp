@@ -11,6 +11,12 @@ LabWork1 */
 #include <algorithm>
 #include "kernel.h"
 
+/**
+ * @brief Генерирует двумерное гауссово ядро для размытия изображения.
+ * @param radius Радиус ядра
+ * @param sigma Сигма (стандартное отклонение)
+ * @return Двумерный вектор с коэффициентами ядра
+ */
 std::vector<std::vector<float>> Gauss_Kernel::GenerateGaussianKernel(int radius, float sigma)
 {
     int size = 2 * radius + 1;

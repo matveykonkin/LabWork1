@@ -15,32 +15,80 @@ LabWork1 */
 #include "turnimage.h"
 #include "kernel.h"
 
+/**
+ * @brief Конструктор по умолчанию для структуры Color. Устанавливает все компоненты в 0.
+ */
 Color::Color() : r(0), g(0), b(0) {}
 
+/**
+ * @brief Конструктор с параметрами для структуры Color.
+ * @param r Красная компонента
+ * @param g Зелёная компонента
+ * @param b Синяя компонента
+ */
 Color::Color(float r, float g, float b) : r(r), g(g), b(b) {}
 
+/**
+ * @brief Деструктор для структуры Color.
+ */
 Color::~Color() {}
 
+/**
+ * @brief Конструктор для класса Image.
+ * @param width Ширина изображения
+ * @param height Высота изображения
+ */
 Image::Image(int width, int height) : m_width(width), m_height(height), m_pixels(width * height) {}
 
+/**
+ * @brief Деструктор для класса Image.
+ */
 Image::~Image() {}
 
+/**
+ * @brief Получает ширину изображения.
+ * @return Ширина изображения
+ */
 int Image::GetWidth() const {
     return m_width;
 }
 
+/**
+ * @brief Получает высоту изображения.
+ * @return Высота изображения
+ */
 int Image::GetHeight() const {
     return m_height;
 }
 
+/**
+ * @brief Получает цвет пикселя по координатам.
+ * @param x X-координата
+ * @param y Y-координата
+ * @return Цвет пикселя
+ */
 Color Image::GetColor(int x, int y) const {
     return m_pixels[y * m_width + x];
 }
 
+/**
+ * @brief Устанавливает цвет пикселя по координатам.
+ * @param color Новый цвет
+ * @param x X-координата
+ * @param y Y-координата
+ */
 void Image::SetColor(const Color& color, int x, int y) {
     m_pixels[y * m_width + x] = color;
 }
 
+/**
+ * @brief Вспомогательный потоковый обработчик для размытия изображения.
+ * @param startY Начальная строка
+ * @param endY Конечная строка
+ * @param kernel Ядро размытия
+ * @param radius Радиус ядра
+ * @param blurredImage Ссылка на изображение для записи результата
+ */
 void Image::ParallelBlurWorker(int startY, int endY,
                              const std::vector<std::vector<float>>& kernel,
                              int radius,
@@ -73,6 +121,10 @@ void Image::ParallelBlurWorker(int startY, int endY,
     }
 }
 
+/**
+ * @brief Читает изображение из BMP-файла.
+ * @param path Путь к файлу
+ */
 void Image::Read(const char* path)
 {
     std::ifstream file(path, std::ios::binary);
@@ -114,6 +166,10 @@ void Image::Read(const char* path)
     }
 }
 
+/**
+ * @brief Сохраняет изображение в BMP-файл.
+ * @param path Путь к файлу
+ */
 void Image::Export(const char* path) const
 {
     std::ofstream file(path, std::ios::binary);
@@ -159,6 +215,11 @@ void Image::Export(const char* path) const
     }
 }
 
+/**
+ * @brief Применяет гауссово размытие к изображению.
+ * @param radius Радиус ядра
+ * @param sigma Сигма (стандартное отклонение)
+ */
 void Image::ApplyGaussianBlur(int radius, float sigma) {
     std::vector<std::vector<float>> kernel = Gauss_Kernel::GenerateGaussianKernel(radius, sigma);
     Image blurredImage(m_width, m_height);

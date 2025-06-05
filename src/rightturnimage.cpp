@@ -13,6 +13,10 @@ LabWork1 */
 #include "image.h"
 #include "turnimage.h"
 
+/**
+ * @brief Поворачивает изображение на 90 градусов вправо и сохраняет результат.
+ * @param path Путь к исходному изображению
+ */
 void Turn_Image::RightTurn(const char* path) {
     Image image(0, 0);
     image.Read(path);

@@ -1,0 +1,27 @@
+name: CI Pipeline
+
+on: [push, pull_request]
+
+jobs:
+  build-and-verify:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Install build tools
+      run: sudo apt-get update && sudo apt-get install -y build-essential
+      
+    - name: Build project
+      run: |
+        make clean
+        make
+        
+    - name: Verify executable
+      run: |
+        if [ ! -f "./imageBMP" ]; then
+          echo "Error: Executable not found!"
+          exit 1
+        fi
+        echo "Build successful, executable exists"

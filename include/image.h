@@ -59,6 +59,7 @@ public:
     void Read(const char* path);
     void Export(const char* path) const;
     void ApplyGaussianBlur(int radius, float sigma);
+    void ParallelBlurWorker(int startY, int endY, const std::vector<std::vector<float>>& kernel, int radius, Image& blurredImage);
 
 private:
     int m_width;

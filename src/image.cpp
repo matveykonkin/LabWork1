@@ -9,6 +9,8 @@ LabWork1 */
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <thread>
+#include <algorithm>
 #include "image.h"
 #include "turnimage.h"
 #include "kernel.h"
@@ -23,24 +25,52 @@ Image::Image(int width, int height) : m_width(width), m_height(height), m_pixels
 
 Image::~Image() {}
 
-int Image::GetWidth() const
-{
+int Image::GetWidth() const {
     return m_width;
 }
 
-int Image::GetHeight() const
-{
+int Image::GetHeight() const {
     return m_height;
 }
 
-Color Image::GetColor(int x, int y) const
-{
+Color Image::GetColor(int x, int y) const {
     return m_pixels[y * m_width + x];
 }
 
-void Image::SetColor(const Color& color, int x, int y)
-{
+void Image::SetColor(const Color& color, int x, int y) {
     m_pixels[y * m_width + x] = color;
+}
+
+void Image::ParallelBlurWorker(int startY, int endY,
+                             const std::vector<std::vector<float>>& kernel,
+                             int radius,
+                             Image& blurredImage) {
+    for (int y = startY; y < endY; ++y) {
+        for (int x = 0; x < m_width; ++x) {
+            Color newColor;
+            float totalWeight = 0.0f;
+
+            for (int ky = -radius; ky <= radius; ++ky) {
+                for (int kx = -radius; kx <= radius; ++kx) {
+                    int pixelX = std::max(0, std::min(x + kx, m_width - 1));
+                    int pixelY = std::max(0, std::min(y + ky, m_height - 1));
+
+                    Color currentColor = GetColor(pixelX, pixelY);
+                    float weight = kernel[ky + radius][kx + radius];
+                    newColor.r += currentColor.r * weight;
+                    newColor.g += currentColor.g * weight;
+                    newColor.b += currentColor.b * weight;
+                    totalWeight += weight;
+                }
+            }
+
+            newColor.r /= totalWeight;
+            newColor.g /= totalWeight;
+            newColor.b /= totalWeight;
+
+            blurredImage.SetColor(newColor, x, y);
+        }
+    }
 }
 
 void Image::Read(const char* path)
@@ -129,40 +159,30 @@ void Image::Export(const char* path) const
     }
 }
 
-void Image::ApplyGaussianBlur(int radius, float sigma)
-{
+void Image::ApplyGaussianBlur(int radius, float sigma) {
     std::vector<std::vector<float>> kernel = Gauss_Kernel::GenerateGaussianKernel(radius, sigma);
-    int kernelSize = 2 * radius + 1;
     Image blurredImage(m_width, m_height);
 
-    for (int y = 0; y < m_height; ++y)
-    {
-        for (int x = 0; x < m_width; ++x)
-        {
-            Color newColor;
-            float totalWeight = 0.0f;
+    unsigned numThreads = std::min(8u, std::thread::hardware_concurrency());
+    std::vector<std::thread> threads;
+    threads.reserve(numThreads);
 
-            for (int ky = -radius; ky <= radius; ++ky)
-            {
-                for (int kx = -radius; kx <= radius; ++kx)
-                {
-                    int pixelX = std::max(0, std::min(x + kx, m_width - 1));
-                    int pixelY = std::max(0, std::min(y + ky, m_height - 1));
+    int rowsPerThread = m_height / numThreads;
+    int remainingRows = m_height % numThreads;
+    int startY = 0;
 
-                    Color currentColor = GetColor(pixelX, pixelY);
-                    newColor.r += currentColor.r * kernel[ky + radius][kx + radius];
-                    newColor.g += currentColor.g * kernel[ky + radius][kx + radius];
-                    newColor.b += currentColor.b * kernel[ky + radius][kx + radius];
-                    totalWeight += kernel[ky + radius][kx + radius];
-                }
-            }
-
-            newColor.r /= totalWeight;
-            newColor.g /= totalWeight;
-            newColor.b /= totalWeight;
-
-            blurredImage.SetColor(newColor, x, y);
-        }
+    for (unsigned i = 0; i < numThreads; ++i) {
+        int endY = startY + rowsPerThread + (i < remainingRows ? 1 : 0);
+        threads.emplace_back(&Image::ParallelBlurWorker, this,
+                           startY, endY,
+                           std::cref(kernel), radius,
+                           std::ref(blurredImage));
+        startY = endY;
     }
+
+    for (auto& thread : threads) {
+        thread.join();
+    }
+
     m_pixels = std::move(blurredImage.m_pixels);
 }

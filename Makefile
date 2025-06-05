@@ -1,39 +1,26 @@
-PROJECT=image
+CXX = g++
+CXXFLAGS = -std=c++11 -pthread -Wall -Wextra -Iinclude
+TARGET = imageBMP
 
-IDIR=.
-CXX=g++
-CXXFLAGS=-I$(IDIR) -std=c++17
+SRC_DIR = src
+INC_DIR = include
+BUILD_DIR = build
 
-ODIR=obj
-LDIR=../lib
+SRCS = $(wildcard $(SRC_DIR)/*.cpp)
+OBJS = $(patsubst $(SRC_DIR)/%.cpp,$(BUILD_DIR)/%.o,$(SRCS))
 
-LIBS=-lm
+all: $(BUILD_DIR) $(TARGET)
 
-DEPS = image.h turnimage.h kernel.h
+$(BUILD_DIR):
+	mkdir -p $(BUILD_DIR)
 
-OBJ = main.o image.o rightturnimage.o leftturnimage.o kernel.o
+$(TARGET): $(OBJS)
+	$(CXX) $(CXXFLAGS) -o $@ $^
 
-.PHONY: default
-
-default: $(PROJECT)
-
-$(PROJECT): $(OBJ)
-	$(CXX) -o $@ $^ $(LIBS)
-
-main.o: main.cpp $(DEPS)
-	$(CXX) -c -o $@ $< $(CXXFLAGS)
-
-Image.o: image.cpp $(DEPS)
-	$(CXX) -c -o $@ $< $(CXXFLAGS)
-
-RightTurnImage.o: rightturnimage.cpp $(DEPS)
-	$(CXX) -c -o $@ $< $(CXXFLAGS)
-
-LeftTurnImage.o: leftturnimage.cpp $(DEPS)
-	$(CXX) -c -o $@ $< $(CXXFLAGS)
-
-Kernel.o: kernel.cpp $(DEPS)
-	$(CXX) -c -o $@ $< $(CXXFLAGS)
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(OBJ) $(PROJECT)
+	rm -rf $(BUILD_DIR) $(TARGET)
+
+.PHONY: all clean

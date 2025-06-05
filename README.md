@@ -9,3 +9,5 @@ this programm work with file if his name is "input.bmp"
 make
 ## Run
 ./imageBMP
+
+Path to image file: /home/matvey/Документы/SimpleList/matveyKonkin83/LabWork1/input.bmp

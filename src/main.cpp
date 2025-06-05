@@ -11,6 +11,12 @@ LabWork1 */
 #include "image.h"
 #include "turnimage.h"
 
+/**
+ * @brief Точка входа в программу. Запрашивает у пользователя параметры, выполняет повороты и размытие изображений, выводит время выполнения операций.
+ * @param argc Количество аргументов командной строки
+ * @param argv Аргументы командной строки
+ * @return Код завершения
+ */
 int main(int argc, char* argv[])
 {
     std::cout << "Enter path to image file, radius (int), and sigma (float) for Gaussian blur:" << std::endl;

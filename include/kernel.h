@@ -11,8 +11,18 @@ LabWork1 */
 
 #include <vector>
 
+/**
+ * @namespace Gauss_Kernel
+ * @brief Пространство имён для функций генерации гауссова ядра.
+ */
 namespace Gauss_Kernel
 {
+    /**
+     * @brief Генерирует двумерное гауссово ядро для размытия изображения.
+     * @param radius Радиус ядра
+     * @param sigma Сигма (стандартное отклонение)
+     * @return Двумерный вектор с коэффициентами ядра
+     */
     std::vector<std::vector<float>> GenerateGaussianKernel(int radius, float sigma);
 }
 

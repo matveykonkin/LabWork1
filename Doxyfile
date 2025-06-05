@@ -1,0 +1,14 @@
+PROJECT_NAME           = "LabWork1"
+OUTPUT_DIRECTORY       = doc
+INPUT                  = include src README.md
+FILE_PATTERNS          = *.h *.cpp *.md
+RECURSIVE              = YES
+EXTRACT_ALL            = YES
+GENERATE_HTML          = YES
+GENERATE_LATEX         = NO
+GENERATE_TREEVIEW      = YES
+QUIET                  = NO
+JAVADOC_AUTOBRIEF      = YES
+MULTILINE_CPP_IS_BRIEF = YES
+OUTPUT_LANGUAGE        = Russian
+USE_MDFILE_AS_MAINPAGE = README.md 

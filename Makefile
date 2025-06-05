@@ -1,39 +1,41 @@
-PROJECT=image
+CXX = g++
+CXXFLAGS = -std=c++17 -Wall -Wextra -pthread
+INCLUDES = -Iinclude
+LDFLAGS = -lgtest -lgtest_main -pthread
 
-IDIR=.
-CXX=g++
-CXXFLAGS=-I$(IDIR) -std=c++17
+SRC_DIR = src
+TEST_DIR = tests
+BUILD_DIR = build
 
-ODIR=obj
-LDIR=../lib
+SRCS = $(filter-out $(SRC_DIR)/main.cpp, $(wildcard $(SRC_DIR)/*.cpp))
+OBJS = $(SRCS:$(SRC_DIR)/%.cpp=$(BUILD_DIR)/%.o)
+TEST_SRCS = $(wildcard $(TEST_DIR)/*.cpp)
+TEST_OBJS = $(TEST_SRCS:$(TEST_DIR)/%.cpp=$(BUILD_DIR)/%.o)
 
-LIBS=-lm
+TARGET = imageBMP
+TEST_TARGET = $(BUILD_DIR)/image_test
 
-DEPS = image.h turnimage.h kernel.h
+.PHONY: all clean test
 
-OBJ = main.o image.o rightturnimage.o leftturnimage.o kernel.o
+all: $(TARGET)
 
-.PHONY: default
+$(BUILD_DIR):
+	mkdir -p $(BUILD_DIR)
 
-default: $(PROJECT)
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp | $(BUILD_DIR)
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
-$(PROJECT): $(OBJ)
-	$(CXX) -o $@ $^ $(LIBS)
+$(BUILD_DIR)/%.o: $(TEST_DIR)/%.cpp | $(BUILD_DIR)
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
-main.o: main.cpp $(DEPS)
-	$(CXX) -c -o $@ $< $(CXXFLAGS)
+$(TARGET): $(OBJS) $(BUILD_DIR)/main.o
+	$(CXX) $(CXXFLAGS) $^ -o $@
 
-Image.o: image.cpp $(DEPS)
-	$(CXX) -c -o $@ $< $(CXXFLAGS)
+$(TEST_TARGET): $(OBJS) $(TEST_OBJS)
+	$(CXX) $(CXXFLAGS) $^ -o $@ $(LDFLAGS)
 
-RightTurnImage.o: rightturnimage.cpp $(DEPS)
-	$(CXX) -c -o $@ $< $(CXXFLAGS)
-
-LeftTurnImage.o: leftturnimage.cpp $(DEPS)
-	$(CXX) -c -o $@ $< $(CXXFLAGS)
-
-Kernel.o: kernel.cpp $(DEPS)
-	$(CXX) -c -o $@ $< $(CXXFLAGS)
+test: $(TEST_TARGET)
+	./$(TEST_TARGET)
 
 clean:
-	rm -f $(OBJ) $(PROJECT)
+	rm -rf $(BUILD_DIR) $(TARGET)
